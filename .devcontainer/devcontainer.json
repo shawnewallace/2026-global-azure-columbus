@@ -1,9 +1,7 @@
 {
   "name": "Global Azure Columbus 2026 — Demo Environment",
-
   // .NET 10 base image (Debian Bookworm)
   "image": "mcr.microsoft.com/devcontainers/dotnet:10.0",
-
   "features": {
     // Node.js 22 LTS — required for npx-based MCP servers
     "ghcr.io/devcontainers/features/node:1": {
@@ -18,29 +16,24 @@
       "version": "latest"
     }
   },
-
   "customizations": {
     "vscode": {
       "extensions": [
         // GitHub Copilot
         "GitHub.copilot",
         "GitHub.copilot-chat",
-
         // C# / .NET
         "ms-dotnettools.csdevkit",
         "ms-dotnettools.csharp",
-
         // Azure MCP Server + Azure Skills (one install, brain + hands)
         "ms-azuretools.vscode-azure-mcp-server",
-
         // Azure Developer CLI (azd) — deploy workflows
         "ms-azuretools.azure-dev",
-
         // Azure resource browsing (auth handled by VS Code built-in Microsoft provider)
         "ms-azuretools.vscode-azureresourcegroups",
-
         // GitHub Actions — watch the coding agent's Actions runs live
-        "GitHub.vscode-github-actions"
+        "GitHub.vscode-github-actions",
+        "bierner.markdown-mermaid"
       ],
       "settings": {
         "github.copilot.enable": {
@@ -52,16 +45,23 @@
       }
     }
   },
-
   "postCreateCommand": "bash .devcontainer/postCreate.sh",
-
   // Forward common .NET dev ports
-  "forwardPorts": [5000, 5001, 8080],
+  "forwardPorts": [
+    5000,
+    5001,
+    8080
+  ],
   "portsAttributes": {
-    "5000": { "label": "App (HTTP)" },
-    "5001": { "label": "App (HTTPS)" },
-    "8080": { "label": "App (Alt)" }
+    "5000": {
+      "label": "App (HTTP)"
+    },
+    "5001": {
+      "label": "App (HTTPS)"
+    },
+    "8080": {
+      "label": "App (Alt)"
+    }
   },
-
   "remoteUser": "vscode"
 }
