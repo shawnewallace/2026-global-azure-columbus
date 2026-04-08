@@ -1,3 +1,4 @@
+using Shouldly;
 using TaskLibrary.Domain.Task;
 
 namespace TaskLibrary.UnitTests.TaskTests.TaskIdTests;
@@ -10,7 +11,7 @@ public sealed class NewTaskIdTests
     {
         var taskId = TaskId.NewTaskId();
 
-        Assert.NotEqual(Guid.Empty, taskId.Value);
+        taskId.Value.ShouldNotBe(Guid.Empty);
     }
 
     [Fact]
@@ -19,6 +20,6 @@ public sealed class NewTaskIdTests
         var first = TaskId.NewTaskId();
         var second = TaskId.NewTaskId();
 
-        Assert.NotEqual(first, second);
+        first.ShouldNotBe(second);
     }
 }

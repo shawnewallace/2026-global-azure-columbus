@@ -1,4 +1,5 @@
 using FakeItEasy;
+using Shouldly;
 using TaskLibrary.Application.Task;
 using TaskLibrary.Domain.Task;
 
@@ -20,11 +21,11 @@ public sealed class CreateTaskAsyncTests
     {
         var request = new CreateTaskRequest("Fix login bug", "Users cannot log in", "High", "Backend");
         var result = await _handler.HandleAsync(request, TestContext.Current.CancellationToken);
-        Assert.Equal("Fix login bug", result.Title);
-        Assert.Equal("Users cannot log in", result.Description);
-        Assert.Equal("High", result.Priority);
-        Assert.Equal("Backlog", result.Status);
-        Assert.Equal("Backend", result.Category);
+        result.Title.ShouldBe("Fix login bug");
+        result.Description.ShouldBe("Users cannot log in");
+        result.Priority.ShouldBe("High");
+        result.Status.ShouldBe("Backlog");
+        result.Category.ShouldBe("Backend");
         A.CallTo(() => _taskRepository.SaveNewTaskAsync(A<Domain.Task.Task>._, A<CancellationToken>._))
             .MustHaveHappenedOnceExactly();
     }
@@ -32,7 +33,7 @@ public sealed class CreateTaskAsyncTests
     [Fact]
     public async System.Threading.Tasks.Task CreateTaskAsync_WithNullRequest_ThrowsArgumentNullException()
     {
-        await Assert.ThrowsAsync<ArgumentNullException>(() =>
+        await Should.ThrowAsync<ArgumentNullException>(() =>
             _handler.HandleAsync(null!, TestContext.Current.CancellationToken));
     }
 
@@ -40,7 +41,7 @@ public sealed class CreateTaskAsyncTests
     public async System.Threading.Tasks.Task CreateTaskAsync_WithInvalidPriority_ThrowsArgumentException()
     {
         var request = new CreateTaskRequest("Title", null, "SuperHighInvalid", null);
-        await Assert.ThrowsAsync<ArgumentException>(() =>
+        await Should.ThrowAsync<ArgumentException>(() =>
             _handler.HandleAsync(request, TestContext.Current.CancellationToken));
     }
 }

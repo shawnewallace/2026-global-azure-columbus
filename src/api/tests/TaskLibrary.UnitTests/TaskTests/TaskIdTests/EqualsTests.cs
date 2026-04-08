@@ -1,3 +1,4 @@
+using Shouldly;
 using TaskLibrary.Domain.Task;
 
 namespace TaskLibrary.UnitTests.TaskTests.TaskIdTests;
@@ -12,7 +13,7 @@ public sealed class EqualsTests
         var first = TaskId.Create(guid);
         var second = TaskId.Create(guid);
 
-        Assert.Equal(first, second);
+        first.ShouldBe(second);
     }
 
     [Fact]
@@ -21,7 +22,7 @@ public sealed class EqualsTests
         var first = TaskId.NewTaskId();
         var second = TaskId.NewTaskId();
 
-        Assert.NotEqual(first, second);
+        first.ShouldNotBe(second);
     }
 
     [Fact]
@@ -30,6 +31,6 @@ public sealed class EqualsTests
         var guid = Guid.NewGuid();
         var taskId = TaskId.Create(guid);
 
-        Assert.Equal(guid.ToString(), taskId.ToString());
+        taskId.ToString().ShouldBe(guid.ToString());
     }
 }

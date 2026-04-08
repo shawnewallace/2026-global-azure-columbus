@@ -1,3 +1,4 @@
+using Shouldly;
 using TaskLibrary.Domain.Task;
 
 namespace TaskLibrary.UnitTests.TaskTests.TaskTests;
@@ -12,11 +13,11 @@ public sealed class AiSuggestionTests
 
         task.ApplyAiSuggestion(TaskPriority.Critical, "DevOps", "Critical because prod is affected.");
 
-        Assert.Equal(TaskPriority.Critical, task.AiSuggestedPriority);
-        Assert.Equal("DevOps", task.AiSuggestedCategory);
-        Assert.Equal("Critical because prod is affected.", task.AiReasoning);
-        Assert.False(task.AiSuggestionConfirmed);
-        Assert.Equal(TaskPriority.Low, task.Priority);
+        task.AiSuggestedPriority.ShouldBe(TaskPriority.Critical);
+        task.AiSuggestedCategory.ShouldBe("DevOps");
+        task.AiReasoning.ShouldBe("Critical because prod is affected.");
+        task.AiSuggestionConfirmed.ShouldBeFalse();
+        task.Priority.ShouldBe(TaskPriority.Low);
     }
 
     [Fact]
@@ -27,9 +28,9 @@ public sealed class AiSuggestionTests
 
         task.ConfirmAiSuggestion();
 
-        Assert.Equal(TaskPriority.Critical, task.Priority);
-        Assert.Equal("DevOps", task.Category);
-        Assert.True(task.AiSuggestionConfirmed);
+        task.Priority.ShouldBe(TaskPriority.Critical);
+        task.Category.ShouldBe("DevOps");
+        task.AiSuggestionConfirmed.ShouldBeTrue();
     }
 
     [Fact]
@@ -37,6 +38,6 @@ public sealed class AiSuggestionTests
     {
         var task = Domain.Task.Task.Create("Deploy service", null, TaskPriority.Low, null);
 
-        Assert.Throws<InvalidOperationException>(() => task.ConfirmAiSuggestion());
+        Should.Throw<InvalidOperationException>(() => task.ConfirmAiSuggestion());
     }
 }

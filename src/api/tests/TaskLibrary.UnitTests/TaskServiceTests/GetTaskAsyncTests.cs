@@ -1,4 +1,5 @@
 using FakeItEasy;
+using Shouldly;
 using TaskLibrary.Application.Task;
 using TaskLibrary.Domain.Task;
 
@@ -22,8 +23,8 @@ public sealed class GetTaskAsyncTests
         A.CallTo(() => _taskRepository.FindByIdAsync(A<TaskId>._, A<CancellationToken>._))
             .Returns(task);
         var result = await _handler.HandleAsync(task.Id.Value, TestContext.Current.CancellationToken);
-        Assert.NotNull(result);
-        Assert.Equal("My task", result.Title);
+        result.ShouldNotBeNull();
+        result.Title.ShouldBe("My task");
     }
 
     [Fact]
@@ -32,6 +33,6 @@ public sealed class GetTaskAsyncTests
         A.CallTo(() => _taskRepository.FindByIdAsync(A<TaskId>._, A<CancellationToken>._))
             .Returns((Domain.Task.Task?)null);
         var result = await _handler.HandleAsync(Guid.NewGuid(), TestContext.Current.CancellationToken);
-        Assert.Null(result);
+        result.ShouldBeNull();
     }
 }

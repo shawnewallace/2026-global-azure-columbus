@@ -1,4 +1,5 @@
 using FakeItEasy;
+using Shouldly;
 using TaskLibrary.Application.Task;
 using TaskLibrary.Domain.Task;
 
@@ -23,7 +24,7 @@ public sealed class SuggestPriorityAsyncTests
         A.CallTo(() => _taskRepository.FindByIdAsync(A<TaskId>._, A<CancellationToken>._))
             .Returns((Domain.Task.Task?)null);
         var result = await _handler.HandleAsync(Guid.NewGuid(), TestContext.Current.CancellationToken);
-        Assert.Null(result);
+        result.ShouldBeNull();
     }
 
     [Fact]
@@ -35,9 +36,9 @@ public sealed class SuggestPriorityAsyncTests
         A.CallTo(() => _llmService.SuggestAsync(A<string>._, A<string?>._, A<CancellationToken>._))
             .Returns((LlmSuggestion?)null);
         var result = await _handler.HandleAsync(task.Id.Value, TestContext.Current.CancellationToken);
-        Assert.NotNull(result);
-        Assert.Equal("Low", result.Priority);
-        Assert.Null(result.AiSuggestedPriority);
+        result.ShouldNotBeNull();
+        result.Priority.ShouldBe("Low");
+        result.AiSuggestedPriority.ShouldBeNull();
     }
 
     [Fact]
@@ -50,10 +51,10 @@ public sealed class SuggestPriorityAsyncTests
         A.CallTo(() => _llmService.SuggestAsync(A<string>._, A<string?>._, A<CancellationToken>._))
             .Returns(suggestion);
         var result = await _handler.HandleAsync(task.Id.Value, TestContext.Current.CancellationToken);
-        Assert.NotNull(result);
-        Assert.Equal("Critical", result.AiSuggestedPriority);
-        Assert.Equal("DevOps", result.AiSuggestedCategory);
-        Assert.Equal("Production is affected.", result.AiReasoning);
+        result.ShouldNotBeNull();
+        result.AiSuggestedPriority.ShouldBe("Critical");
+        result.AiSuggestedCategory.ShouldBe("DevOps");
+        result.AiReasoning.ShouldBe("Production is affected.");
         A.CallTo(() => _taskRepository.SaveTaskAsync(A<Domain.Task.Task>._, A<CancellationToken>._))
             .MustHaveHappenedOnceExactly();
     }

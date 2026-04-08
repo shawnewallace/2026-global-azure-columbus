@@ -1,3 +1,4 @@
+using Shouldly;
 using TaskLibrary.Domain.Task;
 
 namespace TaskLibrary.UnitTests.TaskTests.TaskTests;
@@ -10,14 +11,14 @@ public sealed class CreateTests
     {
         var task = Domain.Task.Task.Create("Fix the login bug", "Users cannot log in", TaskPriority.High, "Backend");
 
-        Assert.Equal("Fix the login bug", task.Title);
-        Assert.Equal("Users cannot log in", task.Description);
-        Assert.Equal(TaskStatus.Backlog, task.Status);
-        Assert.Equal(TaskPriority.High, task.Priority);
-        Assert.Equal("Backend", task.Category);
-        Assert.NotEqual(Guid.Empty, task.Id.Value);
-        Assert.False(task.AiSuggestionConfirmed);
-        Assert.Null(task.AiSuggestedPriority);
+        task.Title.ShouldBe("Fix the login bug");
+        task.Description.ShouldBe("Users cannot log in");
+        task.Status.ShouldBe(TaskStatus.Backlog);
+        task.Priority.ShouldBe(TaskPriority.High);
+        task.Category.ShouldBe("Backend");
+        task.Id.Value.ShouldNotBe(Guid.Empty);
+        task.AiSuggestionConfirmed.ShouldBeFalse();
+        task.AiSuggestedPriority.ShouldBeNull();
     }
 
     [Fact]
@@ -25,18 +26,18 @@ public sealed class CreateTests
     {
         var task = Domain.Task.Task.Create("My task", null, TaskPriority.Medium, null);
 
-        Assert.Null(task.Category);
-        Assert.Null(task.Description);
+        task.Category.ShouldBeNull();
+        task.Description.ShouldBeNull();
     }
 
     [Fact]
     public void Create_WithEmptyTitle_ThrowsArgumentException()
     {
-        var exception = Assert.Throws<ArgumentException>(() =>
+        var exception = Should.Throw<ArgumentException>(() =>
             Domain.Task.Task.Create("   ", "desc", TaskPriority.Low, null));
 
-        Assert.Contains("Title cannot be empty", exception.Message);
-        Assert.Equal("title", exception.ParamName);
+        exception.Message.ShouldContain("Title cannot be empty");
+        exception.ParamName.ShouldBe("title");
     }
 
     [Fact]
@@ -46,7 +47,7 @@ public sealed class CreateTests
 
         var task = Domain.Task.Task.Create("My task", null, TaskPriority.Medium, null);
 
-        Assert.True(task.CreatedAt >= before);
-        Assert.Equal(task.CreatedAt, task.UpdatedAt);
+        task.CreatedAt.ShouldBeGreaterThanOrEqualTo(before);
+        task.CreatedAt.ShouldBe(task.UpdatedAt);
     }
 }

@@ -1,5 +1,6 @@
 using System.Reflection;
 using NetArchTest.Rules;
+using Shouldly;
 using TaskLibrary.Application;
 using TaskLibrary.Domain;
 using TaskLibrary.Infrastructure;
@@ -20,7 +21,7 @@ public sealed class ArchitectureTests
             .ShouldNot().HaveDependencyOn("TaskLibrary.Application")
             .GetResult();
 
-        Assert.True(result.IsSuccessful, "Domain should not depend on Application");
+        result.IsSuccessful.ShouldBeTrue(string.Join(", ", result.FailingTypeNames ?? []));
     }
 
     [Fact]
@@ -30,7 +31,7 @@ public sealed class ArchitectureTests
             .ShouldNot().HaveDependencyOn("TaskLibrary.Infrastructure")
             .GetResult();
 
-        Assert.True(result.IsSuccessful, "Domain should not depend on Infrastructure");
+        result.IsSuccessful.ShouldBeTrue(string.Join(", ", result.FailingTypeNames ?? []));
     }
 
     [Fact]
@@ -40,7 +41,7 @@ public sealed class ArchitectureTests
             .ShouldNot().HaveDependencyOn("TaskLibrary.Api")
             .GetResult();
 
-        Assert.True(result.IsSuccessful, "Domain should not depend on Api");
+        result.IsSuccessful.ShouldBeTrue(string.Join(", ", result.FailingTypeNames ?? []));
     }
 
     [Fact]
@@ -50,7 +51,7 @@ public sealed class ArchitectureTests
             .ShouldNot().HaveDependencyOn("TaskLibrary.Infrastructure")
             .GetResult();
 
-        Assert.True(result.IsSuccessful, "Application should not depend on Infrastructure");
+        result.IsSuccessful.ShouldBeTrue(string.Join(", ", result.FailingTypeNames ?? []));
     }
 
     [Fact]
@@ -60,7 +61,7 @@ public sealed class ArchitectureTests
             .ShouldNot().HaveDependencyOn("TaskLibrary.Api")
             .GetResult();
 
-        Assert.True(result.IsSuccessful, "Application should not depend on Api");
+        result.IsSuccessful.ShouldBeTrue(string.Join(", ", result.FailingTypeNames ?? []));
     }
 
     [Fact]
@@ -70,7 +71,7 @@ public sealed class ArchitectureTests
             .ShouldNot().HaveDependencyOn("TaskLibrary.Api")
             .GetResult();
 
-        Assert.True(result.IsSuccessful, "Infrastructure should not depend on Api");
+        result.IsSuccessful.ShouldBeTrue(string.Join(", ", result.FailingTypeNames ?? []));
     }
 
     [Fact]
@@ -80,7 +81,7 @@ public sealed class ArchitectureTests
             .ShouldNot().HaveDependencyOn("Microsoft.EntityFrameworkCore")
             .GetResult();
 
-        Assert.True(result.IsSuccessful, "Domain should not reference EntityFrameworkCore");
+        result.IsSuccessful.ShouldBeTrue(string.Join(", ", result.FailingTypeNames ?? []));
     }
 
     [Fact]
@@ -92,6 +93,6 @@ public sealed class ArchitectureTests
             .Should().BeSealed()
             .GetResult();
 
-        Assert.True(result.IsSuccessful, "All concrete domain classes should be sealed");
+        result.IsSuccessful.ShouldBeTrue(string.Join(", ", result.FailingTypeNames ?? []));
     }
 }

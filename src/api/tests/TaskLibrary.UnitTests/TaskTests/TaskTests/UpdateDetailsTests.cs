@@ -1,3 +1,4 @@
+using Shouldly;
 using TaskLibrary.Domain.Task;
 
 namespace TaskLibrary.UnitTests.TaskTests.TaskTests;
@@ -13,11 +14,11 @@ public sealed class UpdateDetailsTests
 
         task.UpdateDetails("Updated Title", "New desc", TaskPriority.Critical, "Frontend");
 
-        Assert.Equal("Updated Title", task.Title);
-        Assert.Equal("New desc", task.Description);
-        Assert.Equal(TaskPriority.Critical, task.Priority);
-        Assert.Equal("Frontend", task.Category);
-        Assert.True(task.UpdatedAt >= originalUpdatedAt);
+        task.Title.ShouldBe("Updated Title");
+        task.Description.ShouldBe("New desc");
+        task.Priority.ShouldBe(TaskPriority.Critical);
+        task.Category.ShouldBe("Frontend");
+        task.UpdatedAt.ShouldBeGreaterThanOrEqualTo(originalUpdatedAt);
     }
 
     [Fact]
@@ -25,6 +26,6 @@ public sealed class UpdateDetailsTests
     {
         var task = Domain.Task.Task.Create("Original", null, TaskPriority.Low, null);
 
-        Assert.Throws<ArgumentException>(() => task.UpdateDetails("", null, TaskPriority.Low, null));
+        Should.Throw<ArgumentException>(() => task.UpdateDetails("", null, TaskPriority.Low, null));
     }
 }

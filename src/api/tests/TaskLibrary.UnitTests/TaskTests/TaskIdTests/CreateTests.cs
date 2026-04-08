@@ -1,3 +1,4 @@
+using Shouldly;
 using TaskLibrary.Domain.Task;
 
 namespace TaskLibrary.UnitTests.TaskTests.TaskIdTests;
@@ -12,15 +13,15 @@ public sealed class CreateTests
 
         var taskId = TaskId.Create(guid);
 
-        Assert.Equal(guid, taskId.Value);
+        taskId.Value.ShouldBe(guid);
     }
 
     [Fact]
     public void Create_WithEmptyGuid_ThrowsArgumentException()
     {
-        var exception = Assert.Throws<ArgumentException>(() => TaskId.Create(Guid.Empty));
+        var exception = Should.Throw<ArgumentException>(() => TaskId.Create(Guid.Empty));
 
-        Assert.Contains("TaskId value cannot be empty", exception.Message);
-        Assert.Equal("value", exception.ParamName);
+        exception.Message.ShouldContain("TaskId value cannot be empty");
+        exception.ParamName.ShouldBe("value");
     }
 }

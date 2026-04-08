@@ -37,6 +37,14 @@ When you see paths like `/[project]/features/[feature]/` in rules, replace [proj
 - For all new or modified C# source files in this repository prefer the C# file-scoped namespace style (e.g. `namespace MyTime.Domain.Entries;`) instead of block namespaces. This keeps files concise and matches current C# style conventions used across the codebase.
 - When generating or authoring new C# files, ensure the top of the file uses the file-scoped namespace and that the project's coding-style checks (if any) are satisfied.
 
+## Testing Assertions
+
+Use **Shouldly** for all test assertions in both unit tests and architecture tests.
+- Add `using Shouldly;` to all test files
+- Use fluent assertion style: `actual.ShouldBe(expected)`, `obj.ShouldNotBeNull()`, `collection.ShouldContain(item)`
+- For exceptions: `Should.Throw<TException>(() => ...)` and `Should.ThrowAsync<TException>(async () => ...)`
+- Never use `Assert.*` from xUnit directly — always prefer Shouldly equivalents
+
 ## Custom Agents
 
 This project includes specialized agents for different development tasks. Invoke them using the agent picker or by name:
