@@ -121,6 +121,6 @@ Instructions → Skills → Agents → Prompts
 
 ## Speaker
 
-**Shawn Wildermuth** — [GitHub](https://github.com/shawnwildermuth) · [Twitter/X](https://twitter.com/shawnwildermuth)
+**Shawn Wallace** — [GitHub](https://github.com/shawnewallace) · [Twitter/X](https://x.com/ShawnWallace)
 
 *Centric Consulting*
