@@ -55,6 +55,7 @@ StyleCopReport.xml
 *.tmp
 *.tmp_proj
 *_wpftmp.csproj
+*.csproj.lscache
 *.tlog
 *.vspscc
 *.vssscc

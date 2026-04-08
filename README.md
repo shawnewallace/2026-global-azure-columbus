@@ -31,6 +31,20 @@ This repository contains the demo environment and supporting assets for the talk
   devcontainer.json             # Dev container configuration
   postCreate.sh                 # Automated environment setup
 .mcp.json                       # Azure + Context7 MCP server config
+src/
+  api/                          # .NET 10 Azure Functions API
+    TaskLibrary.slnx            # Solution file
+    Directory.Build.props       # Shared build configuration
+    Directory.Packages.props    # Central package management
+    src/
+      TaskLibrary.Domain/       # Aggregates, value objects, domain events
+      TaskLibrary.Application/  # Use cases, interfaces, DTOs
+      TaskLibrary.Infrastructure/ # EF Core, repositories, LLM stub
+      TaskLibrary.Api/          # Azure Functions HTTP triggers
+    tests/
+      TaskLibrary.UnitTests/    # xUnit v3 + FakeItEasy
+      TaskLibrary.ArchitectureTests/ # NetArchTest layer enforcement
+  web/                          # React 18 + TypeScript (Vite)
 ```
 
 ---
