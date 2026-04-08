@@ -18,11 +18,11 @@ A task management application that demonstrates a realistic, modern Azure archit
 
 ```mermaid
 graph TD
-    FE["React Frontend\n(Static Web App)"]
-    API["Azure Functions API\n(.NET 10 / C#)"]
-    DB["PostgreSQL\n(Flexible Server)"]
-    LLM["Azure OpenAI\nor AI Foundry\n(configurable)"]
-    AI["Application Insights\n(structured logging)"]
+    FE["React Frontend<br />(Static Web App)"]
+    API["Azure Functions API<br />(.NET 10 / C#)"]
+    DB["PostgreSQL<br />(Flexible Server)"]
+    LLM["Azure OpenAI<br />or AI Foundry<br />(configurable)"]
+    AI["Application Insights<br />(structured logging)"]
 
     FE -->|HTTP| API
     API --> DB
