@@ -16,19 +16,18 @@ A task management application that demonstrates a realistic, modern Azure archit
 
 ## Architecture
 
-```
-┌─────────────────────┐        ┌──────────────────────────┐
-│   React Frontend    │──────▶│   Azure Functions API     │
-│  (Static Web App)   │        │   (.NET 10 / C#)          │
-└─────────────────────┘        └──────────┬───────────────┘
-                                          │
-                    ┌─────────────────────┼──────────────────┐
-                    │                     │                  │
-          ┌─────────▼───────┐  ┌──────────▼───────┐  ┌──────▼──────────┐
-          │   PostgreSQL    │  │   Azure OpenAI   │  │ App Insights    │
-          │  (Flexible      │  │   or AI Foundry  │  │ (structured     │
-          │   Server)       │  │   (configurable) │  │  logging)       │
-          └─────────────────┘  └──────────────────┘  └─────────────────┘
+```mermaid
+graph TD
+    FE["React Frontend\n(Static Web App)"]
+    API["Azure Functions API\n(.NET 10 / C#)"]
+    DB["PostgreSQL\n(Flexible Server)"]
+    LLM["Azure OpenAI\nor AI Foundry\n(configurable)"]
+    AI["Application Insights\n(structured logging)"]
+
+    FE -->|HTTP| API
+    API --> DB
+    API --> LLM
+    API --> AI
 ```
 
 ---
