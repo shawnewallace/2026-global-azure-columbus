@@ -244,3 +244,6 @@ dist/
 .AppleDouble
 .LSOverride
 Thumbs.db
+
+# Azure Functions local settings (contains secrets)
+local.settings.json
