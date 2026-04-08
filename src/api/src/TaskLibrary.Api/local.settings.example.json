@@ -1,0 +1,13 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "LLM__Model": "gpt-4o-mini",
+    "LLM__Endpoint": "<your-azure-openai-or-ai-foundry-endpoint>",
+    "LLM__ApiKey": "<your-api-key-or-use-key-vault-reference>"
+  },
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Database=tasklibrary;Username=postgres;Password=postgres"
+  }
+}

@@ -100,7 +100,11 @@ export default function TaskPanel({ task, isOpen, onClose, onSaved }: TaskPanelP
     setSaving(true);
     setError(null);
     try {
-      const updated = await updateTask(task.id, { aiSuggestionConfirmed: true });
+      const updated = await updateTask(task.id, {
+        aiSuggestionConfirmed: true,
+        priority: task.aiSuggestedPriority,
+        category: task.aiSuggestedCategory,
+      });
       onSaved(updated);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Confirm failed');
@@ -109,6 +113,7 @@ export default function TaskPanel({ task, isOpen, onClose, onSaved }: TaskPanelP
     }
   };
 
+  // Dismiss removes the AI badge without applying the suggested values.
   const handleDismissAi = async () => {
     if (!task) return;
     setSaving(true);
