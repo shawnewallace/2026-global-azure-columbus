@@ -1,7 +1,9 @@
 {
   "name": "Global Azure Columbus 2026 — Demo Environment",
-  // .NET 10 base image (Debian Bookworm)
-  "image": "mcr.microsoft.com/devcontainers/dotnet:10.0",
+  // Docker Compose: app container (.NET 10) + PostgreSQL 16 sidecar
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   "features": {
     // Node.js 22 LTS — required for npx-based MCP servers
     "ghcr.io/devcontainers/features/node:1": {
@@ -46,11 +48,12 @@
     }
   },
   "postCreateCommand": "bash .devcontainer/postCreate.sh",
-  // Forward common dev ports
+  // Forward common dev ports (PostgreSQL accessible on host at 5432 via db service)
   "forwardPorts": [
     5000,
     5001,
     5173,
+    5432,
     7071,
     8080
   ],
@@ -63,6 +66,69 @@
     },
     "5173": {
       "label": "React Dev Server (Vite)"
+    },
+    "5432": {
+      "label": "PostgreSQL"
+    },
+    "7071": {
+      "label": "Azure Functions API"
+    },
+    "8080": {
+      "label": "App (Alt)"
+    }
+  },
+  "remoteUser": "vscode"
+}
+    "vscode": {
+      "extensions": [
+        // GitHub Copilot
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        // C# / .NET
+        "ms-dotnettools.csdevkit",
+        "ms-dotnettools.csharp",
+        // Azure MCP Server + Azure Skills (one install, brain + hands)
+        "ms-azuretools.vscode-azure-mcp-server",
+        // Azure Developer CLI (azd) — deploy workflows
+        "ms-azuretools.azure-dev",
+        // Azure resource browsing (auth handled by VS Code built-in Microsoft provider)
+        "ms-azuretools.vscode-azureresourcegroups",
+        // GitHub Actions — watch the coding agent's Actions runs live
+        "GitHub.vscode-github-actions",
+        "bierner.markdown-mermaid"
+      ],
+      "settings": {
+        "github.copilot.enable": {
+          "*": true
+        },
+        "dotnet.defaultSolution": "disable",
+        "editor.formatOnSave": true,
+        "editor.inlineSuggest.enabled": true
+      }
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/postCreate.sh",
+  // Forward common dev ports (5432 = PostgreSQL via network_mode: service:db)
+  "forwardPorts": [
+    5000,
+    5001,
+    5173,
+    5432,
+    7071,
+    8080
+  ],
+  "portsAttributes": {
+    "5000": {
+      "label": "App (HTTP)"
+    },
+    "5001": {
+      "label": "App (HTTPS)"
+    },
+    "5173": {
+      "label": "React Dev Server (Vite)"
+    },
+    "5432": {
+      "label": "PostgreSQL"
     },
     "7071": {
       "label": "Azure Functions API"

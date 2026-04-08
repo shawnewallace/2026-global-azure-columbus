@@ -61,6 +61,25 @@ if [ -f ".config/dotnet-tools.json" ]; then
   echo ""
 fi
 
+# ── EF Core Migrations ────────────────────────────────────────────────
+# Apply database migrations against the local PostgreSQL container.
+# The connection string is injected via the POSTGRES_CONNECTION_STRING
+# environment variable set in docker-compose.yml.
+echo "▶ Applying EF Core migrations..."
+if [ -d "src/api/src/TaskLibrary.Infrastructure" ]; then
+  cd src/api
+  dotnet tool install --global dotnet-ef 2>/dev/null || true
+  dotnet ef database update \
+    --project src/TaskLibrary.Infrastructure \
+    --startup-project src/TaskLibrary.Api \
+    && echo "✓ Database migrations applied" \
+    || echo "  ⚠ Migrations failed — run manually: dotnet ef database update"
+  cd - > /dev/null
+else
+  echo "  ⚠ Infrastructure project not found, skipping migrations"
+fi
+echo ""
+
 # ── Done ─────────────────────────────────────────────────────────────
 echo "================================================================"
 echo "  ✅ Environment ready!"
