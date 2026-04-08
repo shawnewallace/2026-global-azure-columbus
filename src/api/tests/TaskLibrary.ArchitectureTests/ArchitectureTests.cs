@@ -1,6 +1,5 @@
 using System.Reflection;
 using NetArchTest.Rules;
-using Shouldly;
 using TaskLibrary.Application;
 using TaskLibrary.Domain;
 using TaskLibrary.Infrastructure;
