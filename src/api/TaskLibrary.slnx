@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="src/TaskLibrary.Api/TaskLibrary.Api.csproj" />
+  <Project Path="src/TaskLibrary.Application/TaskLibrary.Application.csproj" />
+  <Project Path="src/TaskLibrary.Domain/TaskLibrary.Domain.csproj" />
+  <Project Path="src/TaskLibrary.Infrastructure/TaskLibrary.Infrastructure.csproj" />
+  <Project Path="tests/TaskLibrary.UnitTests/TaskLibrary.UnitTests.csproj" />
+  <Project Path="tests/TaskLibrary.ArchitectureTests/TaskLibrary.ArchitectureTests.csproj" />
+</Solution>
