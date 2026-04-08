@@ -6,9 +6,15 @@ services:
     command: sleep infinity
     environment:
       POSTGRES_CONNECTION_STRING: Host=db;Port=5432;Database=tasklibrary;Username=tasklibrary;Password=tasklibrary_dev
+      # Aspire Dashboard OTLP endpoint — telemetry from Azure Functions
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://aspire-dashboard:18889
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_SERVICE_NAME: tasklibrary-api
     depends_on:
       db:
         condition: service_healthy
+      aspire-dashboard:
+        condition: service_started
     networks:
       - devnet
 
@@ -28,6 +34,21 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    networks:
+      - devnet
+
+  # Standalone Aspire Dashboard — structured logs, traces, metrics without full Aspire orchestration
+  aspire-dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:9.0
+    restart: unless-stopped
+    environment:
+      DASHBOARD__FRONTEND__AUTHMODE: Unsecured
+      DASHBOARD__OTLP__AUTHMODE: Unsecured
+      ASPIRE_ALLOW_UNSECURED_TRANSPORT: "true"
+    ports:
+      - "18888:18888"   # Dashboard UI
+      - "18889:18889"   # OTLP gRPC ingest
+      - "18890:18890"   # OTLP HTTP ingest
     networks:
       - devnet
 
