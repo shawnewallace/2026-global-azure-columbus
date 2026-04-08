@@ -4,17 +4,15 @@ using TaskLibrary.Domain.Task;
 
 namespace TaskLibrary.UnitTests.TaskServiceTests;
 
-/// <summary>Tests for <see cref="TaskService.GetTaskAsync"/>.</summary>
 public sealed class GetTaskAsyncTests
 {
     private readonly ITaskRepository _taskRepository;
-    private readonly TaskService _taskService;
+    private readonly GetTaskHandler _handler;
 
     public GetTaskAsyncTests()
     {
         _taskRepository = A.Fake<ITaskRepository>();
-        var llmService = A.Fake<ILlmService>();
-        _taskService = new TaskService(_taskRepository, llmService);
+        _handler = new GetTaskHandler(_taskRepository);
     }
 
     [Fact]
@@ -23,9 +21,7 @@ public sealed class GetTaskAsyncTests
         var task = Domain.Task.Task.Create("My task", null, TaskPriority.Medium, null);
         A.CallTo(() => _taskRepository.FindByIdAsync(A<TaskId>._, A<CancellationToken>._))
             .Returns(task);
-
-        var result = await _taskService.GetTaskAsync(task.Id.Value, TestContext.Current.CancellationToken);
-
+        var result = await _handler.HandleAsync(task.Id.Value, TestContext.Current.CancellationToken);
         Assert.NotNull(result);
         Assert.Equal("My task", result.Title);
     }
@@ -35,9 +31,7 @@ public sealed class GetTaskAsyncTests
     {
         A.CallTo(() => _taskRepository.FindByIdAsync(A<TaskId>._, A<CancellationToken>._))
             .Returns((Domain.Task.Task?)null);
-
-        var result = await _taskService.GetTaskAsync(Guid.NewGuid(), TestContext.Current.CancellationToken);
-
+        var result = await _handler.HandleAsync(Guid.NewGuid(), TestContext.Current.CancellationToken);
         Assert.Null(result);
     }
 }

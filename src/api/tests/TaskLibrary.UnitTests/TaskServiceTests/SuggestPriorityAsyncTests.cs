@@ -4,18 +4,17 @@ using TaskLibrary.Domain.Task;
 
 namespace TaskLibrary.UnitTests.TaskServiceTests;
 
-/// <summary>Tests for <see cref="TaskService.SuggestPriorityAsync"/>.</summary>
 public sealed class SuggestPriorityAsyncTests
 {
     private readonly ITaskRepository _taskRepository;
     private readonly ILlmService _llmService;
-    private readonly TaskService _taskService;
+    private readonly SuggestPriorityHandler _handler;
 
     public SuggestPriorityAsyncTests()
     {
         _taskRepository = A.Fake<ITaskRepository>();
         _llmService = A.Fake<ILlmService>();
-        _taskService = new TaskService(_taskRepository, _llmService);
+        _handler = new SuggestPriorityHandler(_taskRepository, _llmService);
     }
 
     [Fact]
@@ -23,9 +22,7 @@ public sealed class SuggestPriorityAsyncTests
     {
         A.CallTo(() => _taskRepository.FindByIdAsync(A<TaskId>._, A<CancellationToken>._))
             .Returns((Domain.Task.Task?)null);
-
-        var result = await _taskService.SuggestPriorityAsync(Guid.NewGuid(), TestContext.Current.CancellationToken);
-
+        var result = await _handler.HandleAsync(Guid.NewGuid(), TestContext.Current.CancellationToken);
         Assert.Null(result);
     }
 
@@ -37,9 +34,7 @@ public sealed class SuggestPriorityAsyncTests
             .Returns(task);
         A.CallTo(() => _llmService.SuggestAsync(A<string>._, A<string?>._, A<CancellationToken>._))
             .Returns((LlmSuggestion?)null);
-
-        var result = await _taskService.SuggestPriorityAsync(task.Id.Value, TestContext.Current.CancellationToken);
-
+        var result = await _handler.HandleAsync(task.Id.Value, TestContext.Current.CancellationToken);
         Assert.NotNull(result);
         Assert.Equal("Low", result.Priority);
         Assert.Null(result.AiSuggestedPriority);
@@ -50,19 +45,16 @@ public sealed class SuggestPriorityAsyncTests
     {
         var task = Domain.Task.Task.Create("Deploy", null, TaskPriority.Low, null);
         var suggestion = new LlmSuggestion("Critical", "DevOps", "Production is affected.");
-
         A.CallTo(() => _taskRepository.FindByIdAsync(A<TaskId>._, A<CancellationToken>._))
             .Returns(task);
         A.CallTo(() => _llmService.SuggestAsync(A<string>._, A<string?>._, A<CancellationToken>._))
             .Returns(suggestion);
-
-        var result = await _taskService.SuggestPriorityAsync(task.Id.Value, TestContext.Current.CancellationToken);
-
+        var result = await _handler.HandleAsync(task.Id.Value, TestContext.Current.CancellationToken);
         Assert.NotNull(result);
         Assert.Equal("Critical", result.AiSuggestedPriority);
         Assert.Equal("DevOps", result.AiSuggestedCategory);
         Assert.Equal("Production is affected.", result.AiReasoning);
-        A.CallTo(() => _taskRepository.UpdateAsync(A<Domain.Task.Task>._, A<CancellationToken>._))
+        A.CallTo(() => _taskRepository.SaveTaskAsync(A<Domain.Task.Task>._, A<CancellationToken>._))
             .MustHaveHappenedOnceExactly();
     }
 }

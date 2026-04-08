@@ -18,7 +18,13 @@ var host = new HostBuilder()
 
         services.AddScoped<ITaskRepository, TaskRepository>();
         services.AddScoped<ILlmService, LlmServiceStub>();
-        services.AddScoped<ITaskService, TaskService>();
+
+        services.AddScoped<ICreateTaskHandler, CreateTaskHandler>();
+        services.AddScoped<IGetTaskHandler, GetTaskHandler>();
+        services.AddScoped<IListTasksHandler, ListTasksHandler>();
+        services.AddScoped<IUpdateTaskHandler, UpdateTaskHandler>();
+        services.AddScoped<IDeleteTaskHandler, DeleteTaskHandler>();
+        services.AddScoped<ISuggestPriorityHandler, SuggestPriorityHandler>();
 
         services.AddApplicationInsightsTelemetryWorkerService();
         services.ConfigureFunctionsApplicationInsights();

@@ -4,6 +4,10 @@ namespace TaskLibrary.Domain.Task;
 /// Task aggregate root. Encapsulates all business rules for a task
 /// in the Task Library domain. Created exclusively via static factory methods.
 /// </summary>
+// NOTE: This class intentionally exceeds the 50-line Object Calisthenics guideline.
+// The Task aggregate requires its full set of properties (Id, Title, Description, Status,
+// Priority, Category, AI fields, timestamps), two factory methods (Create/Reconstitute),
+// and multiple business methods — all of which are essential to the domain model.
 public sealed class Task
 {
     public TaskId Id { get; }

@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -6,25 +7,18 @@ using TaskLibrary.Application.Task;
 
 namespace TaskLibrary.Api.Functions;
 
-/// <summary>
-/// HTTP trigger function for triggering an AI suggestion for a task.
-/// Route: POST /api/tasks/{id}/suggest
-/// </summary>
 public sealed class TaskSuggestFunctions
 {
-    private readonly ITaskService _taskService;
+    private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+    private readonly ISuggestPriorityHandler _handler;
     private readonly ILogger<TaskSuggestFunctions> _logger;
 
-    public TaskSuggestFunctions(ITaskService taskService, ILogger<TaskSuggestFunctions> logger)
+    public TaskSuggestFunctions(ISuggestPriorityHandler handler, ILogger<TaskSuggestFunctions> logger)
     {
-        _taskService = taskService;
+        _handler = handler;
         _logger = logger;
     }
 
-    /// <summary>
-    /// POST /api/tasks/{id}/suggest
-    /// Triggers the LLM suggestion pipeline for the given task.
-    /// </summary>
     [Function(nameof(SuggestTaskPriority))]
     public async Task<HttpResponseData> SuggestTaskPriority(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "tasks/{id:guid}/suggest")] HttpRequestData request,
@@ -32,15 +26,12 @@ public sealed class TaskSuggestFunctions
         CancellationToken cancellationToken)
     {
         _logger.LogInformation("SuggestTaskPriority invoked for {TaskId}", id);
-
-        var updated = await _taskService.SuggestPriorityAsync(id, cancellationToken);
-
+        var updated = await _handler.HandleAsync(id, cancellationToken);
         if (updated is null)
             return request.CreateResponse(HttpStatusCode.NotFound);
-
         var response = request.CreateResponse(HttpStatusCode.OK);
         response.Headers.Add("Content-Type", "application/json; charset=utf-8");
-        await response.WriteStringAsync(System.Text.Json.JsonSerializer.Serialize(updated), cancellationToken);
+        await response.WriteStringAsync(JsonSerializer.Serialize(updated, JsonOptions), cancellationToken);
         return response;
     }
 }
