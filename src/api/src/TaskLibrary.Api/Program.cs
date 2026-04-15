@@ -18,7 +18,7 @@ var connectionString =
 builder.Services.AddDbContext<TaskLibraryDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-builder.Services.AddTaskServices();
+builder.Services.AddTaskServices(builder.Configuration);
 
 builder.Services.AddOpenApi();
 
