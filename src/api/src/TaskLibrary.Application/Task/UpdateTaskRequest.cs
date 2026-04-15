@@ -6,4 +6,5 @@ public sealed record UpdateTaskRequest(
     string? Description,
     string Priority,
     string? Category,
-    string Status);
+    string Status,
+    bool AiSuggestionConfirmed = false);

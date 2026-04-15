@@ -29,6 +29,8 @@ public sealed class UpdateTaskHandler : IUpdateTaskHandler
         var status = TaskParser.ParseStatus(request.Status);
         task.UpdateDetails(request.Title, request.Description, priority, request.Category);
         task.ChangeStatus(status);
+        if (request.AiSuggestionConfirmed)
+            task.ConfirmAiSuggestion();
         await _taskRepository.SaveTaskAsync(task, cancellationToken);
         _logger.LogInformation("Task {TaskId} updated successfully", id);
         return TaskDto.FromDomain(task);

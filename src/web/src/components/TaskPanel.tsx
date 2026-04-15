@@ -101,9 +101,12 @@ export default function TaskPanel({ task, isOpen, onClose, onSaved }: TaskPanelP
     setError(null);
     try {
       const updated = await updateTask(task.id, {
+        title: task.title,
+        description: task.description,
+        status: task.status,
+        priority: task.aiSuggestedPriority ?? task.priority,
+        category: task.aiSuggestedCategory ?? task.category,
         aiSuggestionConfirmed: true,
-        priority: task.aiSuggestedPriority,
-        category: task.aiSuggestedCategory,
       });
       onSaved(updated);
     } catch (err) {
@@ -119,7 +122,14 @@ export default function TaskPanel({ task, isOpen, onClose, onSaved }: TaskPanelP
     setSaving(true);
     setError(null);
     try {
-      const updated = await updateTask(task.id, { aiSuggestionConfirmed: true });
+      const updated = await updateTask(task.id, {
+        title: task.title,
+        description: task.description,
+        status: task.status,
+        priority: task.priority,
+        category: task.category,
+        aiSuggestionConfirmed: true,
+      });
       onSaved(updated);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Dismiss failed');

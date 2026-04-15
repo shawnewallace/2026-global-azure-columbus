@@ -32,7 +32,7 @@ This repository contains the demo environment and supporting assets for the talk
   postCreate.sh                 # Automated environment setup
 .mcp.json                       # Azure + Context7 MCP server config
 src/
-  api/                          # .NET 10 Azure Functions API
+  api/                          # .NET 10 ASP.NET Core Minimal API
     TaskLibrary.slnx            # Solution file
     Directory.Build.props       # Shared build configuration
     Directory.Packages.props    # Central package management
@@ -40,7 +40,7 @@ src/
       TaskLibrary.Domain/       # Aggregates, value objects, domain events
       TaskLibrary.Application/  # Use cases, interfaces, DTOs
       TaskLibrary.Infrastructure/ # EF Core, repositories, LLM stub
-      TaskLibrary.Api/          # Azure Functions HTTP triggers
+      TaskLibrary.Api/          # Minimal API endpoints + Scalar UI
     tests/
       TaskLibrary.UnitTests/    # xUnit v3 + FakeItEasy
       TaskLibrary.ArchitectureTests/ # NetArchTest layer enforcement
