@@ -19,7 +19,11 @@ public sealed class CorrelationIdMiddleware
     {
         var correlationId = ResolveCorrelationId(context.Request);
 
-        context.Response.Headers[CorrelationIdHeader] = correlationId;
+        context.Response.OnStarting(() =>
+        {
+            context.Response.Headers[CorrelationIdHeader] = correlationId;
+            return System.Threading.Tasks.Task.CompletedTask;
+        });
 
         using (_logger.BeginScope(new Dictionary<string, object> { ["CorrelationId"] = correlationId }))
         {

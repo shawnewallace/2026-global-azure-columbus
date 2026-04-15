@@ -65,3 +65,5 @@ app.UseMiddleware<CorrelationIdMiddleware>();
 app.RegisterEndpoints();
 
 await app.RunAsync();
+
+public partial class Program { }
