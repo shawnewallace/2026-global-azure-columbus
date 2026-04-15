@@ -36,6 +36,7 @@ echo "▶ Pre-caching Context7 MCP server package..."
 npx --yes @upstash/context7-mcp@latest --version 2>/dev/null && echo "✓ @upstash/context7-mcp cached" || echo "  ⚠ Could not pre-cache @upstash/context7-mcp (will download on first use)"
 echo ""
 
+
 # ── Azure Skills Plugin files ─────────────────────────────────────────
 # Pull skill files directly from microsoft/azure-skills into .github/plugins/
 # so they're visible and version-controllable in the project.
@@ -61,6 +62,30 @@ if [ -f ".config/dotnet-tools.json" ]; then
   echo ""
 fi
 
+# ── Web dependencies ─────────────────────────────────────────────────
+# Pre-install npm packages so the React dev server starts instantly.
+echo "▶ Installing web dependencies..."
+if [ -d "src/web" ]; then
+  cd src/web && npm install --silent && cd - > /dev/null
+  echo "✓ Web dependencies installed"
+else
+  echo "  ⚠ src/web not found, skipping"
+fi
+echo ""
+
+# ── .NET API build ────────────────────────────────────────────────────
+# Pre-build the API so `dotnet run` starts quickly on postStartCommand.
+echo "▶ Building .NET API..."
+if [ -d "src/api" ]; then
+  cd src/api && dotnet build --nologo -v q \
+    && echo "✓ .NET API built" \
+    || echo "  ⚠ Build failed — check compiler output above"
+  cd - > /dev/null
+else
+  echo "  ⚠ src/api not found, skipping"
+fi
+echo ""
+
 # ── EF Core Migrations ────────────────────────────────────────────────
 # Apply database migrations against the local PostgreSQL container.
 # The connection string is injected via the POSTGRES_CONNECTION_STRING
@@ -68,7 +93,6 @@ fi
 echo "▶ Applying EF Core migrations..."
 if [ -d "src/api/src/TaskLibrary.Infrastructure" ]; then
   cd src/api
-  dotnet tool install --global dotnet-ef 2>/dev/null || true
   dotnet ef database update \
     --project src/TaskLibrary.Infrastructure \
     --startup-project src/TaskLibrary.Api \

@@ -6,7 +6,7 @@ services:
     command: sleep infinity
     environment:
       POSTGRES_CONNECTION_STRING: Host=db;Port=5432;Database=tasklibrary;Username=tasklibrary;Password=tasklibrary_dev
-      # Aspire Dashboard OTLP endpoint — telemetry from Azure Functions
+      # Aspire Dashboard OTLP endpoint
       OTEL_EXPORTER_OTLP_ENDPOINT: http://aspire-dashboard:18889
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc
       OTEL_SERVICE_NAME: tasklibrary-api

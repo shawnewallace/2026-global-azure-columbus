@@ -1,6 +1,6 @@
 {
   "name": "Global Azure Columbus 2026 — Demo Environment",
-  // Docker Compose: app (.NET 10) + db (PostgreSQL 16) + aspire-dashboard
+  // Docker Compose: app (.NET 10) + db (PostgreSQL 16) + aspire-dashboard (Azurite removed — no longer needed)
   "dockerComposeFile": "docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
@@ -48,25 +48,20 @@
     }
   },
   "postCreateCommand": "bash .devcontainer/postCreate.sh",
-  // Start the React dev server every time the container starts
-  "postStartCommand": "cd /workspaces/${localWorkspaceFolderBasename}/src/web && npm install --silent && npm run dev &",
+  // Start the React dev server and Azure Functions API every time the container starts.
+  // Web deps and the .NET build are pre-warmed in postCreate, so these start quickly.
+  "postStartCommand": "(cd /workspaces/${localWorkspaceFolderBasename}/src/web && npm run dev) & (cd /workspaces/${localWorkspaceFolderBasename}/src/api/src/TaskLibrary.Api && dotnet run) &",
   "forwardPorts": [
-    5000,
-    5001,
     5173,
     5432,
-    7071,
     8080,
     18888,
     18889
   ],
   "portsAttributes": {
-    "5000": { "label": "App (HTTP)" },
-    "5001": { "label": "App (HTTPS)" },
-    "5173": { "label": "React Dev Server (Vite)" },
+    "5173": { "label": "React Dev Server (Vite)", "onAutoForward": "openBrowser" },
     "5432": { "label": "PostgreSQL" },
-    "7071": { "label": "Azure Functions API" },
-    "8080": { "label": "App (Alt)" },
+    "8080": { "label": "API (ASP.NET Core)", "onAutoForward": "notify" },
     "18888": { "label": "Aspire Dashboard" },
     "18889": { "label": "OTLP gRPC" }
   },

@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <IsPackable>false</IsPackable>
+    <UseVSTestRunner>false</UseVSTestRunner>
     <!-- Suppress MSB3277: EF Core version conflict from Azure Functions transitive deps is resolved safely -->
     <MSBuildWarningsAsMessages>MSB3277</MSBuildWarningsAsMessages>
   </PropertyGroup>

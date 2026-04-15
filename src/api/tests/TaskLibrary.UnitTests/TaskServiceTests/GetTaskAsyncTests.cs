@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using TaskLibrary.Application.Task;
 using TaskLibrary.Domain.Task;
 
@@ -11,7 +12,7 @@ public sealed class GetTaskAsyncTests
     public GetTaskAsyncTests()
     {
         _taskRepository = A.Fake<ITaskRepository>();
-        _handler = new GetTaskHandler(_taskRepository);
+        _handler = new GetTaskHandler(_taskRepository, A.Fake<ILogger<GetTaskHandler>>());
     }
 
     [Fact]

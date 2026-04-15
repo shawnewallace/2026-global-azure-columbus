@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using TaskLibrary.Application.Task;
 using TaskLibrary.Domain.Task;
 
@@ -13,7 +14,7 @@ public sealed class SuggestPriorityAsyncTests
     {
         _taskRepository = A.Fake<ITaskRepository>();
         _llmService = A.Fake<ILlmService>();
-        _handler = new SuggestPriorityHandler(_taskRepository, _llmService);
+        _handler = new SuggestPriorityHandler(_taskRepository, _llmService, A.Fake<ILogger<SuggestPriorityHandler>>());
     }
 
     [Fact]

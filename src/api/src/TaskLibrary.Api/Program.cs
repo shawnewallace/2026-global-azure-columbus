@@ -1,34 +1,66 @@
-using Microsoft.Azure.Functions.Worker;
+using Azure.Monitor.OpenTelemetry.Exporter;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using TaskLibrary.Application.Task;
-using TaskLibrary.Domain.Task;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
+using Scalar.AspNetCore;
+using TaskLibrary.Api;
+using TaskLibrary.Api.Task;
 using TaskLibrary.Infrastructure.Task;
 
-var host = new HostBuilder()
-    .ConfigureFunctionsWebApplication()
-    .ConfigureServices((context, services) =>
-    {
-        var connectionString = context.Configuration["ConnectionStrings__DefaultConnection"]
-            ?? "Host=localhost;Database=tasklibrary;Username=postgres;Password=postgres";
+var builder = WebApplication.CreateBuilder(args);
 
-        services.AddDbContext<TaskLibraryDbContext>(options =>
-            options.UseNpgsql(connectionString));
+var connectionString =
+    Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING")
+    ?? builder.Configuration["ConnectionStrings:DefaultConnection"]
+    ?? throw new InvalidOperationException("No database connection string configured. Set POSTGRES_CONNECTION_STRING or ConnectionStrings:DefaultConnection.");
 
-        services.AddScoped<ITaskRepository, TaskRepository>();
-        services.AddScoped<ILlmService, LlmServiceStub>();
+builder.Services.AddDbContext<TaskLibraryDbContext>(options =>
+    options.UseNpgsql(connectionString));
 
-        services.AddScoped<ICreateTaskHandler, CreateTaskHandler>();
-        services.AddScoped<IGetTaskHandler, GetTaskHandler>();
-        services.AddScoped<IListTasksHandler, ListTasksHandler>();
-        services.AddScoped<IUpdateTaskHandler, UpdateTaskHandler>();
-        services.AddScoped<IDeleteTaskHandler, DeleteTaskHandler>();
-        services.AddScoped<ISuggestPriorityHandler, SuggestPriorityHandler>();
+builder.Services.AddTaskServices();
 
-        services.AddApplicationInsightsTelemetryWorkerService();
-        services.ConfigureFunctionsApplicationInsights();
-    })
-    .Build();
+builder.Services.AddOpenApi();
 
-await host.RunAsync();
+builder.Services.AddCors(options =>
+    options.AddDefaultPolicy(policy =>
+        policy.WithOrigins(
+                builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+                ?? ["http://localhost:5173"])
+            .AllowAnyHeader()
+            .AllowAnyMethod()));
+
+builder.Logging.Configure(o =>
+{
+    o.ActivityTrackingOptions = ActivityTrackingOptions.SpanId | ActivityTrackingOptions.TraceId;
+});
+
+var otelBuilder = builder.Services.AddOpenTelemetry()
+    .WithTracing(tracing => tracing
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddOtlpExporter())
+    .WithMetrics(metrics => metrics
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddOtlpExporter())
+    .WithLogging(logging => logging.AddOtlpExporter());
+
+var aiConnStr = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
+if (!string.IsNullOrEmpty(aiConnStr))
+{
+    otelBuilder
+        .WithTracing(t => t.AddAzureMonitorTraceExporter(o => o.ConnectionString = aiConnStr))
+        .WithMetrics(m => m.AddAzureMonitorMetricExporter(o => o.ConnectionString = aiConnStr))
+        .WithLogging(l => l.AddAzureMonitorLogExporter(o => o.ConnectionString = aiConnStr));
+}
+
+var app = builder.Build();
+
+app.MapOpenApi();
+app.MapScalarApiReference();
+
+app.UseCors();
+app.RegisterEndpoints();
+
+await app.RunAsync();

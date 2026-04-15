@@ -1,6 +1,6 @@
 import type { Task, CreateTaskRequest, UpdateTaskRequest, TaskStatus, TaskPriority } from '../types/task';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:7071';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
 
 async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
