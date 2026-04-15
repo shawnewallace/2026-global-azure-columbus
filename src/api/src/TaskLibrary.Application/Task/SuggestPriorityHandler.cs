@@ -26,7 +26,17 @@ public sealed class SuggestPriorityHandler : ISuggestPriorityHandler
             _logger.LogWarning("Task {TaskId} not found for suggestion", id);
             return null;
         }
-        var suggestion = await _llmService.SuggestAsync(task.Title, task.Description, cancellationToken);
+        LlmSuggestion? suggestion;
+        try
+        {
+            suggestion = await _llmService.SuggestAsync(task.Title, task.Description, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "LLM service threw an exception for task {TaskId}", id);
+            return TaskDto.FromDomain(task);
+        }
+
         if (suggestion is null)
         {
             _logger.LogWarning("LLM returned no suggestion for task {TaskId}", id);

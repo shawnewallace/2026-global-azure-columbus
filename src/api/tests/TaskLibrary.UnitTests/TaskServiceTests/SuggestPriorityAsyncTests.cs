@@ -57,4 +57,20 @@ public sealed class SuggestPriorityAsyncTests
         A.CallTo(() => _taskRepository.SaveTaskAsync(A<Domain.Task.Task>._, A<CancellationToken>._))
             .MustHaveHappenedOnceExactly();
     }
+
+    [Fact]
+    public async System.Threading.Tasks.Task SuggestPriorityAsync_WhenLlmThrowsException_ReturnsTaskWithoutSuggestion()
+    {
+        var task = Domain.Task.Task.Create("Deploy", null, TaskPriority.Low, null);
+        A.CallTo(() => _taskRepository.FindByIdAsync(A<TaskId>._, A<CancellationToken>._))
+            .Returns(task);
+        A.CallTo(() => _llmService.SuggestAsync(A<string>._, A<string?>._, A<CancellationToken>._))
+            .Throws<Exception>();
+        var result = await _handler.HandleAsync(task.Id.Value, TestContext.Current.CancellationToken);
+        result.ShouldNotBeNull();
+        result.Priority.ShouldBe("Low");
+        result.AiSuggestedPriority.ShouldBeNull();
+        A.CallTo(() => _taskRepository.SaveTaskAsync(A<Domain.Task.Task>._, A<CancellationToken>._))
+            .MustNotHaveHappened();
+    }
 }
