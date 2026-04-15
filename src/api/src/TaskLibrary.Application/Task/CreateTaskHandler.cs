@@ -21,7 +21,7 @@ public sealed class CreateTaskHandler : ICreateTaskHandler
         var priority = TaskParser.ParsePriority(request.Priority);
         var task = Domain.Task.Task.Create(request.Title, request.Description, priority, request.Category);
         await _taskRepository.SaveNewTaskAsync(task, cancellationToken);
-        _logger.LogInformation("Task {TaskId} created successfully", task.Id.Value);
+        _logger.LogInformation("Task created. TaskId={TaskId} Title={Title}", task.Id.Value, task.Title);
         return TaskDto.FromDomain(task);
     }
 }

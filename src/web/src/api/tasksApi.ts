@@ -3,8 +3,9 @@ import type { Task, CreateTaskRequest, UpdateTaskRequest, TaskStatus, TaskPriori
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
 
 async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
+  const correlationId = crypto.randomUUID();
   const response = await fetch(`${API_BASE_URL}${path}`, {
-    headers: { 'Content-Type': 'application/json', ...init?.headers },
+    headers: { 'Content-Type': 'application/json', 'X-Correlation-ID': correlationId, ...init?.headers },
     ...init,
   });
 

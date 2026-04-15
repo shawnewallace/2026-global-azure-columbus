@@ -58,7 +58,7 @@ public sealed class AzureOpenAILlmService : ILlmService
         catch (Exception ex)
         {
             stopwatch.Stop();
-            _logger.LogError(ex, "LLM call failed for task title '{Title}' after {LatencyMs}ms", title, stopwatch.ElapsedMilliseconds);
+            _logger.LogWarning(ex, "LLM call failed. Model={Model} LatencyMs={LatencyMs} Success={Success}", _deployment, stopwatch.ElapsedMilliseconds, false);
             return null;
         }
     }
@@ -71,11 +71,12 @@ public sealed class AzureOpenAILlmService : ILlmService
 
     private void LogCompletion(ChatTokenUsage usage, long elapsedMs) =>
         _logger.LogInformation(
-            "LLM call completed: model={Deployment}, inputTokens={InputTokens}, outputTokens={OutputTokens}, latencyMs={LatencyMs}",
+            "LLM call completed. Model={Model} PromptTokens={PromptTokens} CompletionTokens={CompletionTokens} LatencyMs={LatencyMs} Success={Success}",
             _deployment,
             usage.InputTokenCount,
             usage.OutputTokenCount,
-            elapsedMs);
+            elapsedMs,
+            true);
 
     private static LlmSuggestion? DeserializeSuggestion(string json)
     {

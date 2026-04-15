@@ -30,9 +30,16 @@ public sealed class UpdateTaskHandler : IUpdateTaskHandler
         task.UpdateDetails(request.Title, request.Description, priority, request.Category);
         task.ChangeStatus(status);
         if (request.AiSuggestionConfirmed)
+        {
             task.ConfirmAiSuggestion();
+            _logger.LogInformation("AI suggestion confirmed for task. TaskId={TaskId}", id);
+        }
+        else
+        {
+            _logger.LogInformation("AI suggestion not confirmed for task. TaskId={TaskId}", id);
+        }
         await _taskRepository.SaveTaskAsync(task, cancellationToken);
-        _logger.LogInformation("Task {TaskId} updated successfully", id);
+        _logger.LogInformation("Task updated. TaskId={TaskId}", id);
         return TaskDto.FromDomain(task);
     }
 }

@@ -61,6 +61,7 @@ app.MapOpenApi();
 app.MapScalarApiReference();
 
 app.UseCors();
+app.UseMiddleware<CorrelationIdMiddleware>();
 app.RegisterEndpoints();
 
 await app.RunAsync();
