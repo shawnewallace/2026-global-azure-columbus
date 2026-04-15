@@ -15,7 +15,31 @@
 
 ---
 
-## 2. The Problem with Solo Wins (3 min)
+## 2. AI Maturity Model (2 min)
+
+> ⚠️ **External slide — speaker will bring this in separately.**
+
+*Bridge from Hook: "Before we talk about the system, let's name where most teams are today."*
+
+The maturity model maps the progression from autocomplete to agentic-first:
+
+| Level | Mode | What it looks like |
+|---|---|---|
+| 1 | **Autocomplete** | Tab-complete, inline suggestions |
+| 2 | **Chat** | Ask Copilot questions, get explanations |
+| 3 | **Agent mode** | Autonomous edits in your local IDE |
+| 4 | **Agentic workflows** | Cloud coding agent, background tasks, PR creation |
+| 5 | **Agentic-first team** | Shared system — instructions, agents, skills, governance |
+
+- Most teams are at Level 1–2. A few individuals have reached Level 3.
+- The gap: **Level 5 requires a system, not just a tool.**
+- This talk is about getting your *team* to Level 4–5.
+
+*Narration bridge: "Let me show you why most teams stall at Level 2 — and what it takes to move."*
+
+---
+
+## 3. The Problem with Solo Wins (2 min)
 
 - Each dev starts from scratch every session — no shared context
 - Copilot doesn't know how *your* team writes code, reviews PRs, or deploys
@@ -24,7 +48,7 @@
 
 ---
 
-## 3. The System: What Goes in `.github/` (7 min)
+## 4. The System: What Goes in `.github/` (7 min)
 
 *The composition model — the talk's core concept*
 
@@ -37,22 +61,24 @@
 | `*.agent.md` | Role-based specialists with tool restrictions and handoffs |
 | `.mcp.json` | The execution layer — connects agents to real tools |
 
-- Show the actual `.github/` folder from the repo
-- Key point: **this is version-controlled, reviewable, and shared with the whole team**
+- Show the actual `.github/` folder from the demo repo
+- Key point: **version-controlled, PR-reviewed, shared with the whole team**
+- Decision tree: Instructions (always-on guardrails) → Skills (portable SOPs) → Agents (role-based specialists) → Prompts (lightweight macros)
 - "Skills: the brain. MCP: the hands."
 
 ---
 
-## 4. Adding Azure: The Azure Skills Plugin (3 min)
+## 5. Adding Azure: The Azure Skills Plugin (3 min)
 
-- One install, three layers: Skills (20 workflows) + Azure MCP (200+ tools) + Context7
+- One install, three layers: **Skills** (20 curated workflows) + **Azure MCP Server** (200+ tools) + **Foundry MCP** (AI specialist)
+- Not a prompt pack — curated workflows, decision trees, and guardrails encoded in plain text
 - Before/after: same prompt, completely different outcome
 - `azure-prepare` → `azure-validate` → `azure-deploy` in sequence
 - The skills live in `.github/plugins/azure-skills/` — visible, auditable, team-owned
 
 ---
 
-## 5. Live Demo (12 min)
+## 6. Live Demo (12 min)
 
 *Using Azure Skills on the Task Library application — narrate every step*
 
@@ -68,7 +94,7 @@
 
 ---
 
-## 6. Governance: This Isn't Blind Trust (3 min)
+## 7. Governance: This Isn't Blind Trust (3 min)
 
 - Skills are **plain text, version-controlled, PR-reviewed** — not a black box
 - Org-level controls: model policies, which agents are enabled, MCP server allow-list
@@ -78,7 +104,7 @@
 
 ---
 
-## 7. How to Start (2 min)
+## 8. How to Start (2 min)
 
 Three steps to get your team moving:
 
@@ -95,15 +121,16 @@ Repo with all assets: `github.com/shawnewallace/2026-global-azure-columbus`
 | Section | Time |
 |---|---|
 | Hook | 2 min |
-| The Problem with Solo Wins | 3 min |
+| AI Maturity Model *(external slide)* | 2 min |
+| The Problem with Solo Wins | 2 min |
 | The System: What Goes in `.github/` | 7 min |
 | Adding Azure: The Azure Skills Plugin | 3 min |
 | Live Demo | 12 min |
 | Governance | 3 min |
 | How to Start | 2 min |
-| **Total** | **32 min** |
+| **Total** | **33 min** |
 
-> **If running long:** Trim demo to 10 min, or cut governance to 2 min.
+> **If running long:** Trim demo to 10 min (saves 2 min), or cut governance to 2 min (saves 1 min). Target is 30 min.
 
 ---
 
@@ -113,4 +140,4 @@ Repo with all assets: `github.com/shawnewallace/2026-global-azure-columbus`
 - Live demo: using Microsoft's Azure Skills and `@azure` to deploy and operate Azure resources from Copilot
 - Shared assets — `copilot-instructions.md`, `AGENTS.md`, PR templates — that raise the floor for every developer
 - Enterprise governance: model policies, audit logs, and the agent control plane
-- How to move your team from solo wins to agentic-first workflows
+- How to move your team from solo wins to agentic-first workflows (the maturity progression)
