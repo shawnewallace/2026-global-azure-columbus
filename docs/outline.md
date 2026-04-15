@@ -54,16 +54,17 @@
 
 ## 5. Live Demo (12 min)
 
-*Starting from a GitHub issue, narrate every step*
+*Using Azure Skills on the Task Library application — narrate every step*
 
-1. **Show the system** — walk the `.github/` folder: instructions, agents, `.mcp.json`
-2. **Assign the issue** to Copilot's coding agent from GitHub
-3. **Watch it work** — agent reads instructions, creates a plan, writes code on a branch
-4. **Azure Skills kick in** — `@azure` wires up infrastructure, runs `azure-prepare`
-5. **Deploy** — `azd` runs the deployment pipeline live
-6. **PR opened** — agent commits, pushes, opens PR with description
+1. **Set the scene** — show the running Task Library app, walk the `.github/` folder: instructions, agents, `.mcp.json`, Azure Skills in `.github/plugins/azure-skills/`
+2. **Prepare** — run `azure-prepare` on the project; watch it analyze the app and generate `Dockerfile`, `azure.yaml`, and Bicep infra
+3. **Validate** — run `azure-validate`; pre-flight checks on resources, quotas, and permissions before burning time on a failed deploy
+4. **Deploy** — run `azure-deploy`; `azd up` orchestrates the full deployment pipeline end-to-end
+5. **Operate** — use `@azure` to query live resources: list resource groups, check App Insights logs, inspect the deployed function app
+6. **Diagnose** — use `azure-diagnostics` to troubleshoot a real or simulated issue using logs, metrics, and KQL
+7. **Narrate throughout** — contrast "what Copilot would have said without the plugin" vs. "what it actually does with the skills"
 
-*Narrate what's happening and why at each step*
+*Key moment: show the before/after — same prompt, completely different outcome*
 
 ---
 
