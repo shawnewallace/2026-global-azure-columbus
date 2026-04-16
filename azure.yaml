@@ -1,0 +1,18 @@
+name: task-library
+metadata:
+  template: azd-init
+
+services:
+  api:
+    project: ./src/api/src/TaskLibrary.Api
+    language: dotnet
+    host: containerapp
+    docker:
+      path: ./src/api/Dockerfile
+      context: ./src/api
+
+  web:
+    project: ./src/web
+    language: js
+    host: staticwebapp
+    dist: dist

@@ -78,6 +78,11 @@ _Chutzpah*
 *.sap
 *.e2e
 $tf/
+
+# Azure Developer CLI
+.azure/
+!.azure/deployment-plan.md
+src/web/.env.production
 *.gpState
 _ReSharper*/
 *.[Rr]e[Ss]harper

@@ -12,7 +12,8 @@ public sealed class TaskLibraryDbContextFactory : IDesignTimeDbContextFactory<Ta
     {
         var connectionString = args.Length > 0
             ? args[0]
-            : "Host=db;Port=5432;Database=tasklibrary;Username=tasklibrary;Password=tasklibrary_dev";
+            : Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING")
+              ?? "Host=db;Port=5432;Database=tasklibrary;Username=tasklibrary;Password=tasklibrary_dev";
 
         var options = new DbContextOptionsBuilder<TaskLibraryDbContext>()
             .UseNpgsql(connectionString)

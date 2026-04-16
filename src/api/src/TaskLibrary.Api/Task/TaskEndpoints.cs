@@ -23,15 +23,29 @@ public static class TaskEndpoints
         group.MapPost("/", async (
             CreateTaskRequest request, ICreateTaskHandler handler, CancellationToken ct) =>
         {
-            var created = await handler.HandleAsync(request, ct);
-            return Results.Created($"/api/tasks/{created.Id}", created);
+            try
+            {
+                var created = await handler.HandleAsync(request, ct);
+                return Results.Created($"/api/tasks/{created.Id}", created);
+            }
+            catch (ArgumentException ex)
+            {
+                return Results.BadRequest(new { error = ex.Message });
+            }
         });
 
         group.MapPut("/{id:guid}", async (
             Guid id, UpdateTaskRequest request, IUpdateTaskHandler handler, CancellationToken ct) =>
         {
-            var updated = await handler.HandleAsync(id, request, ct);
-            return updated is null ? Results.NotFound() : Results.Ok(updated);
+            try
+            {
+                var updated = await handler.HandleAsync(id, request, ct);
+                return updated is null ? Results.NotFound() : Results.Ok(updated);
+            }
+            catch (ArgumentException ex)
+            {
+                return Results.BadRequest(new { error = ex.Message });
+            }
         });
 
         group.MapDelete("/{id:guid}", async (

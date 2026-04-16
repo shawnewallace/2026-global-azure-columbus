@@ -7,7 +7,41 @@
 
 ## Before You Start
 
-Verify everything is running:
+### 1. Install the Azure Skills Plugin (once per machine)
+
+Install the Azure MCP Extension from the VS Code Marketplace — it bundles the MCP server and the full skills layer automatically:
+
+> [Azure MCP Extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azure-mcp-server)
+
+Authenticate before the demo:
+```bash
+az login
+azd auth login
+```
+
+### 2. Verify the plugin is active (three quick checks)
+
+**Skills layer** — ask in Copilot Chat:
+```
+What Azure services would I need to deploy this project?
+```
+> Expect structured Azure guidance. Generic cloud advice = skills not loaded.
+
+**Azure MCP** — ask in Copilot Chat:
+```
+List my Azure resource groups.
+```
+> Expect a real tool-backed response from your Azure account.
+
+**Foundry MCP** — ask in Copilot Chat:
+```
+What AI models are available in Microsoft Foundry?
+```
+> Expect a Foundry-backed model list.
+
+If any check fails: reload VS Code, restart MCP servers, and re-run `az login`.
+
+### 3. Verify the app is running
 
 ```bash
 # API on :8080

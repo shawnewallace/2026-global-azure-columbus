@@ -1,0 +1,11 @@
+.git
+.azure
+.vs
+.vscode
+**/bin
+**/obj
+**/TestResults
+tests/
+*.user
+*.suo
+.DS_Store
