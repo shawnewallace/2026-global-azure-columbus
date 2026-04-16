@@ -1,0 +1,57 @@
+# Copilot Instructions
+
+## Language Policy
+
+All instructions and prompts in this repository must be written in English. This applies to:
+- All rule and instruction files in `.github/instructions/`
+- All prompt files in `.github/prompts/`
+- All documentation and code comments intended for contributors
+
+## Development Workflow
+
+When working with C# code, follow these instructions very carefully.
+
+It is **EXTREMELY important that you follow the instructions in the rule files very carefully.**
+
+### Implementation Steps
+
+**IMPORTANT:** Always follow these steps when implementing new features:
+
+1. Consult any relevant instructions files listed below and start by listing which rule files have been used to guide the implementation (e.g. `Instructions used: [minimal-api.instructions.md, domain-driven-design.instructions.md]`).
+
+2. Follow TDD when it is possible. Always start new changes by writing new test cases (or changing existing tests). 
+Remember to consult [Unit and Integration Tests](./instructions/unit-and-integration-tests.instructions.md) for details on how to write tests.
+
+3. Always run `dotnet test` or `dotnet build` to verify that all tests pass before committing your changes. 
+Don't ask to run the tests, just do it. If you are not sure how to run the tests, ask for help. 
+You can also use `dotnet watch test` to run the tests automatically when you change the code.
+
+4. Fix any compiler warnings and errors before going to the next step.
+
+When you see paths like `/[project]/features/[feature]/` in rules, replace [project] with the name of the project you are working on (e.g. `Ordering`), and `[feature]` with the name of the feature you are working on (e.g. `VerifyOrAddPayment`).
+
+## C# Coding Style
+
+### File-Scoped Namespaces
+
+- For all new or modified C# source files in this repository prefer the C# file-scoped namespace style (e.g. `namespace MyTime.Domain.Entries;`) instead of block namespaces. This keeps files concise and matches current C# style conventions used across the codebase.
+- When generating or authoring new C# files, ensure the top of the file uses the file-scoped namespace and that the project's coding-style checks (if any) are satisfied.
+
+## Testing Assertions
+
+Use **Shouldly** for all test assertions in both unit tests and architecture tests.
+- Add `using Shouldly;` to all test files
+- Use fluent assertion style: `actual.ShouldBe(expected)`, `obj.ShouldNotBeNull()`, `collection.ShouldContain(item)`
+- For exceptions: `Should.Throw<TException>(() => ...)` and `Should.ThrowAsync<TException>(async () => ...)`
+- Never use `Assert.*` from xUnit directly — always prefer Shouldly equivalents
+
+## Custom Agents
+
+This project includes specialized agents for different development tasks. Invoke them using the agent picker or by name:
+
+- **Archy** (`.github/agents/architect.agent.md`) - Architect mode for planning, ADRs, and backlog curation. Markdown editing only.
+- **Sharp** (`.github/agents/expert-dotnet-software-engineer.agent.md`) - Expert .NET engineer with SOLID principles, TDD, and performance optimization.
+- **Scout** (`.github/agents/plan.agent.md`) - Strategic planning and codebase analysis. Read-only, focuses on understanding before implementation.
+- **Wire** (`.github/agents/api-architect.agent.md`) - API integration specialist. Creates complete API client code with resilience patterns.
+
+See individual agent files for detailed capabilities and use cases.
