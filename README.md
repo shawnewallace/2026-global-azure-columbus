@@ -96,6 +96,16 @@ Azure Skills are active in VS Code immediately. To also use them in Copilot CLI:
 /plugin install azure@azure-skills
 ```
 
+### Environment Parameter Files
+
+The `infra/` folder includes environment-specific Bicep parameter files:
+
+- `main.demo.parameters.json`
+- `main.dev.parameters.json`
+- `main.prod.parameters.json`
+
+The existing `main.parameters.json` remains the default `azd` parameter file and continues to use `AZURE_ENV_NAME` and `AZURE_LOCATION`. Use the environment-specific files when you want fixed deployment values for manual Bicep or ARM deployments.
+
 ---
 
 ## Key Concepts

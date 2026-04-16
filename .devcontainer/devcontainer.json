@@ -35,7 +35,9 @@
         "ms-azuretools.vscode-azureresourcegroups",
         // GitHub Actions — watch the coding agent's Actions runs live
         "GitHub.vscode-github-actions",
-        "bierner.markdown-mermaid"
+        "bierner.markdown-mermaid",
+        "ms-azuretools.vscode-azurestaticwebapps",
+        "ms-azuretools.vscode-bicep"
       ],
       "settings": {
         "github.copilot.enable": {
@@ -59,11 +61,23 @@
     18889
   ],
   "portsAttributes": {
-    "5173": { "label": "React Dev Server (Vite)", "onAutoForward": "openBrowser" },
-    "5432": { "label": "PostgreSQL" },
-    "8080": { "label": "API (ASP.NET Core)", "onAutoForward": "notify" },
-    "18888": { "label": "Aspire Dashboard" },
-    "18889": { "label": "OTLP gRPC" }
+    "5173": {
+      "label": "React Dev Server (Vite)",
+      "onAutoForward": "openBrowser"
+    },
+    "5432": {
+      "label": "PostgreSQL"
+    },
+    "8080": {
+      "label": "API (ASP.NET Core)",
+      "onAutoForward": "notify"
+    },
+    "18888": {
+      "label": "Aspire Dashboard"
+    },
+    "18889": {
+      "label": "OTLP gRPC"
+    }
   },
   "remoteUser": "vscode"
 }
