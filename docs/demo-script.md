@@ -61,8 +61,10 @@ npm run dev &
 >
 > For a live demo, **blank slate** is recommended. Do it right before you take the stage:
 > ```bash
-> rm -rf infra/ azure.yaml
+> rm -rf infra/ azure.yaml .azure/
 > ```
+> - `infra/` and `azure.yaml` — removed so the skill generates them from scratch (maximum "wow" factor)
+> - `.azure/` — contains saved azd environment state (`global-azure-demo`, subscription ID, previous deployment URLs). If left in place, `azd up` skips the environment-setup step and re-deploys against the old environment instead of provisioning fresh.
 
 **Optional warm-up — verify the skills layer is active (from the README):**
 
