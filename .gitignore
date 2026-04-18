@@ -248,3 +248,9 @@ Thumbs.db
 
 # Azure Functions local settings (contains secrets)
 local.settings.json
+
+# Error files
+*.err
+
+# Generated PDFs
+pdfs/
